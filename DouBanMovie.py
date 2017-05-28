@@ -79,7 +79,7 @@ def run_spider(movie_tag_lists):
 	movie_lists = list()
 	for movie_tag in movie_tag_lists:
 		movie_list = movie_spider(movie_tag)
-		movie_list_list = sorted(movie_list, key=lambda x: x[1], reverse=True)
+		movie_list = sorted(movie_list, key=lambda x: x[1], reverse=True)
 		movie_lists.append(movie_list)
 	return movie_lists
 
@@ -103,11 +103,11 @@ def output_to_excel(movie_lists, movie_tag_lists):
 
 
 if __name__ == '__main__':
-	# movie_tag_lists = ['爱情','喜剧','剧情','动画','科幻','动作','经典','悬疑']
+	movie_tag_lists = ['爱情', '喜剧', '剧情', '动画', '科幻', '动作', '经典', '悬疑']
 	# movie_tag_lists = ['青春','犯罪','惊悚','文艺','搞笑','纪录片','励志','恐怖']
 	# movie_tag_lists = ['战争','短片','魔幻','传记','情色','暴力','家庭','音乐']
 	# movie_tag_lists = ['浪漫', '女性', '史诗', '童话', '黑帮', '西部', '同志']
-	movie_tag_lists = ['美国', '日本', '香港', '英国', '中国', '韩国', '法国', '台湾']
+	# movie_tag_lists = ['美国', '日本', '香港', '英国', '中国', '韩国', '法国', '台湾']
 	# movie_tag_lists = ['中国大陆','德国','印度','欧洲']
 	# movie_tag_lists = ['周星驰','宫崎骏','王家卫','梁朝伟','JohnnyDepp','尼古拉斯·凯奇','斯皮尔伯格','成龙']
 	# movie_tag_lists = ['刘德华','张艺谋','张国荣']
