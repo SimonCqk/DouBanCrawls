@@ -3,14 +3,16 @@
 
 ### 豆瓣图书爬虫
 > 爬取结果在`Result_Book`文件夹  <br>
+
 ####实现功能：
  - 按标签名称进行相关图书信息的抓取，排序后存入本地excel，可自行进行进一步筛选，按`Tag`存取在不同的`Sheet`
  - 使用`User Agent`伪装成不同的浏览器进行爬取，并加入随机延时来更好的模仿浏览器行为，避免爬虫被封
     
 ##### 豆瓣页面截图：
-
+    ![Page](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/doubanpage.jpg)
 ##### 运行时截图：
-
+    ![Running](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/running.jpg)
 ##### Excel结果截图：
+    ![Excel](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/excel.jpg)
 
 > 欢迎 Star/PR.
