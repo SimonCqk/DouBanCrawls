@@ -9,10 +9,15 @@
  - 使用`User Agent`伪装成不同的浏览器进行爬取，并加入随机延时来更好的模仿浏览器行为，避免爬虫被封
     
 ##### 豆瓣页面截图：
-    ![Page](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/doubanpage.jpg)
+
+![Page](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/doubanpage.jpg?raw=true)
+
 ##### 运行时截图：
-    ![Running](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/running.jpg)
+
+![Running](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/running.jpg?raw=true)
+
 ##### Excel结果截图：
-    ![Excel](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/excel.jpg)
+
+![Excel](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/excel.jpg?raw=true)
 
 > 欢迎 Star/PR.
