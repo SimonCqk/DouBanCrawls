@@ -20,4 +20,4 @@
 
 ![Excel](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/excel.jpg?raw=true)
 
-> 欢迎 Star/PR.
+> 欢迎 Star / PR.
