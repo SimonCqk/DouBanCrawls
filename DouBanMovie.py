@@ -22,17 +22,17 @@ def page_parser(movie_info, movie_list: list):
 	desc_list = desc.split('/')
 	movie_url = movie_info.find('a', attrs={'class': 'title'}).get('href')
 	try:
-		movie_origin = '电影产地： ' + desc_list[0]
+		movie_origin = desc_list[0]
 	except:
-		movie_origin = '电影产地： 暂无'
+		movie_origin = ' 暂无'
 	try:
-		movie_time = '上映时间： ' + str(desc_list[-5])
+		movie_time = str(desc_list[-5])
 	except:
-		movie_time = '上映时间： 暂无'
+		movie_time = ' 暂无'
 	try:
-		movie_starring = '电影主演: ' + ','.join(desc_list[-4:])
+		movie_starring = ','.join(desc_list[-4:])
 	except:
-		movie_starring = '电影主演: 暂无'
+		movie_starring = ' 暂无'
 	try:
 		rating = movie_info.find('span', {'class': 'rating_nums'}).string.strip()
 	except:

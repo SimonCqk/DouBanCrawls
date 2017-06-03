@@ -1,13 +1,13 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-import sys
 import time
 import urllib.request
-import requests
+
 import numpy
-from openpyxl import Workbook
+import requests
 from bs4 import BeautifulSoup
+from openpyxl import Workbook
 
 # Some User Agents  Chrome/Edge/IE
 User_Agents = [{
@@ -46,13 +46,13 @@ def book_spider(book_tag):
 			desc_list = desc.split('/')
 			book_url = book_info.find('a', attrs={'class': 'title'}).get('href')
 			try:
-				author_info = '作者/译者： ' + '/'.join(desc_list[0:-3])
+				author_info = '/'.join(desc_list[0:-3])
 			except:
-				author_info = '作者/译者： 暂无'
+				author_info = ' 暂无'
 			try:
-				pub_info = '出版信息： ' + '/'.join(desc_list[-3:])
+				pub_info = '/'.join(desc_list[-3:])
 			except:
-				pub_info = '出版信息： 暂无'
+				pub_info = ' 暂无'
 			try:
 				rating = book_info.find('span', {'class': 'rating_nums'}).string.strip()
 			except:
@@ -82,7 +82,7 @@ def output_to_excel(book_lists, book_tag_lists):
 		ws.append(wb.create_sheet(title=book_tag_lists[i]))
 	file_name = 'Book-List'
 	for i in range(len(book_tag_lists)):
-		ws[i].append(['序号', '书名', '评分', '作者', '出版社', '出版日期', '售价'])
+		ws[i].append(['序号', '书名', '评分', '作者/译者', '出版社', '出版日期', '售价'])
 		for index, book_list in enumerate(book_lists[i], start=1):
 			ws[i].append([index, book_list[0], float(book_list[1]), book_list[2], book_list[3]])
 			print("\r当前进度: {:.2f}%".format(index * 100 / len(book_lists[i])), end="")
