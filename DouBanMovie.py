@@ -1,6 +1,6 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
-import asyncio
+import threading
 import time
 import urllib.request
 
@@ -71,17 +71,26 @@ def movie_spider(movie_tag):
 			page_parser(movie_info, movie_list)
 			try_times = 0  # set 0 when got valid information
 		page_num += 1
-		print("Downloading Information From Page {0}".format(page_num))
+		print("Downloading Information From Tag: {1} Page: {0} ".format(page_num, movie_tag))
 	print('Finish Catching Tag -> {0}'.format(movie_tag))
 	return movie_list
 
 
-async def run_spider(movie_tag_lists):
-	movie_lists = list()
+def fetch_list(movie_tag: str, movie_lists: list):
+	movie_list = movie_spider(movie_tag)
+	movie_list = sorted(movie_list, key=lambda x: x[1], reverse=True)
+	movie_lists.append(movie_list)
+
+
+def run_spider(movie_tag_lists):
+	movie_lists = []
+	threads = []
 	for movie_tag in movie_tag_lists:
-		movie_list = movie_spider(movie_tag)
-		movie_list = sorted(movie_list, key=lambda x: x[1], reverse=True)
-		movie_lists.append(movie_list)
+		t = threading.Thread(target=fetch_list, args=(movie_tag, movie_lists))
+		threads.append(t)
+		t.start()
+	for i in range(len(threads)):
+		threads[i].join()
 	return movie_lists
 
 
@@ -104,30 +113,21 @@ def output_to_excel(movie_lists, movie_tag_lists):
 	wb.save(file_name)
 
 
-async def one_spider_run(movie_tags):
-	movie_lists = await run_spider(movie_tags)
-	print(type(movie_lists))
-	output_to_excel(movie_lists, movie_tags)
-
-
-async def main_run():
-	movie_tag_lists_1 = ['爱情', '喜剧', '剧情', '动画', '科幻', '动作', '经典', '悬疑']
+def main():
+	movie_tag_lists = ['爱情', '喜剧', '剧情', '动画', '科幻', '动作', '经典', '悬疑']
 	'''
-	movie_tag_lists_2 = ['青春', '犯罪', '惊悚', '文艺', '搞笑', '纪录片', '励志', '恐怖']
-	movie_tag_lists_3 = ['战争', '短片', '魔幻', '传记', '情色', '暴力', '家庭', '音乐']
-	movie_tag_lists_4 = ['浪漫', '女性', '史诗', '童话', '黑帮', '西部', '同志']
-	movie_tag_lists_5 = ['美国', '日本', '香港', '英国', '中国', '韩国', '法国', '台湾']
-	movie_tag_lists_6 = ['中国大陆', '德国', '印度', '欧洲']
-	movie_tag_lists_7 = ['周星驰', '宫崎骏', '王家卫', '梁朝伟', 'JohnnyDepp', '尼古拉斯·凯奇', '斯皮尔伯格', '成龙']
-	movie_tag_lists_8 = ['刘德华', '张艺谋', '张国荣']
-	movie_tag_lists_9 = ['2017', '2016', '2015', '2014', '2013']
+	movie_tag_lists = ['青春', '犯罪', '惊悚', '文艺', '搞笑', '纪录片', '励志', '恐怖']
+	movie_tag_lists = ['战争', '短片', '魔幻', '传记', '情色', '暴力', '家庭', '音乐']
+	movie_tag_lists = ['浪漫', '女性', '史诗', '童话', '黑帮', '西部', '同志']
+	movie_tag_lists = ['美国', '日本', '香港', '英国', '中国', '韩国', '法国', '台湾']
+	movie_tag_lists = ['中国大陆', '德国', '印度', '欧洲']
+	movie_tag_lists = ['周星驰', '宫崎骏', '王家卫', '梁朝伟', 'JohnnyDepp', '尼古拉斯·凯奇', '斯皮尔伯格', '成龙']
+	movie_tag_lists = ['刘德华', '张艺谋', '张国荣']
+	movie_tag_lists = ['2017', '2016', '2015', '2014', '2013']
 	'''
-	movie_tag_lists = [movie_tag_lists_1]
-	for movie_tags in movie_tag_lists:
-		await one_spider_run(movie_tags)
+	movie_lists = run_spider(movie_tag_lists)
+	output_to_excel(movie_lists, movie_tag_lists)
 
 
 if __name__ == '__main__':
-	loop = asyncio.get_event_loop()
-	loop.run_until_complete(main_run())
-	loop.close()
+	main()
