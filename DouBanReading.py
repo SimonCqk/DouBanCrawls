@@ -1,6 +1,7 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
+import threading
 import time
 import urllib.request
 
@@ -61,17 +62,26 @@ def book_spider(book_tag):
 			book_list.append([title, rating, author_info, pub_info])
 			try_times = 0  # set 0 when got valid information
 		page_num += 1
-		print("Downloading Information From Page {0}".format(page_num))
+		print("Downloading Information From Tag: {1} Page: {0} ".format(page_num, book_tag))
 	print('Finish Catching Tag -> {0}'.format(book_tag))
 	return book_list
 
 
+def fetch_list(book_tag: str, book_lists: list):
+	book_list = book_spider(book_tag)
+	book_list = sorted(book_list, key=lambda x: x[1], reverse=True)
+	book_lists.append(book_list)
+
+
 def run_spider(book_tag_lists):
 	book_lists = list()
+	threads = []
 	for book_tag in book_tag_lists:
-		book_list = book_spider(book_tag)
-		book_list = sorted(book_list, key=lambda x: x[1], reverse=True)
-		book_lists.append(book_list)
+		t = threading.Thread(target=fetch_list, args=(book_tag, book_lists))
+		threads.append(t)
+		t.start()
+	for i in range(len(threads)):
+		threads[i].join()
 	return book_lists
 
 
@@ -107,3 +117,4 @@ if __name__ == '__main__':
 	book_tag_lists = ['个人管理', '时间管理', '投资', '文化', '宗教']
 	book_lists = run_spider(book_tag_lists)
 	output_to_excel(book_lists, book_tag_lists)
+	print("----All Done----")
