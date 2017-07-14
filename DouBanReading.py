@@ -1,9 +1,9 @@
 #!/usr/bin/python
 # -*- coding:utf-8 -*-
 
-import threading
 import time
 import urllib.request
+from concurrent.futures import ThreadPoolExecutor
 
 import numpy
 import requests
@@ -75,13 +75,9 @@ def fetch_list(book_tag: str, book_lists: list):
 
 def run_spider(book_tag_lists):
 	book_lists = list()
-	threads = []
-	for book_tag in book_tag_lists:
-		t = threading.Thread(target=fetch_list, args=(book_tag, book_lists))
-		threads.append(t)
-		t.start()
-	for i in range(len(threads)):
-		threads[i].join()
+	with ThreadPoolExecutor(max_workers=len(book_tag_lists)) as executor:
+		for book_tag in book_tag_lists:
+			executor.submit(fetch_list, book_tag, book_lists)
 	return book_lists
 
 
