@@ -83,9 +83,7 @@ def run_spider(book_tag_lists):
 
 def output_to_excel(book_lists, book_tag_lists):
 	wb = Workbook(write_only=True)
-	ws = list()
-	for i in range(len(book_tag_lists)):
-		ws.append(wb.create_sheet(title=book_tag_lists[i]))
+	ws = [wb.create_sheet(title=book_tag) for book_tag in book_tag_lists]
 	file_name = 'Book-List'
 	for i in range(len(book_tag_lists)):
 		ws[i].append(['序号', '书名', '评分', '作者/译者', '出版社', '出版日期', '售价'])

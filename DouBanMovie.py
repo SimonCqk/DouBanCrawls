@@ -84,21 +84,17 @@ def fetch_list(movie_tag: str, movie_lists: list):
 
 def run_spider(movie_tag_lists):
 	movie_lists = []
-	threads = []
-	for movie_tag in movie_tag_lists:
-		t = threading.Thread(target=fetch_list, args=(movie_tag, movie_lists))
-		threads.append(t)
-		t.start()
-	for i in range(len(threads)):
-		threads[i].join()
+	threads = [threading.Thread(target=fetch_list, args=(movie_tag, movie_lists)) for movie_tag in movie_tag_lists]
+	for thread in threads:
+		thread.start()
+	for thread in threads:
+		thread.join()
 	return movie_lists
 
 
 def output_to_excel(movie_lists, movie_tag_lists):
 	wb = Workbook(write_only=True)
-	ws = list()
-	for i in range(len(movie_tag_lists)):
-		ws.append(wb.create_sheet(title=movie_tag_lists[i]))
+	ws = [wb.create_sheet(title=movie_tag) for movie_tag in movie_tag_lists]
 	file_name = 'Movie-List'
 	for i in range(len(movie_tag_lists)):
 		ws[i].append(['序号', '电影名', '评分', '电影产地', '上映时间', '电影主演', '豆瓣链接'])
