@@ -25,88 +25,88 @@ def book_spider(book_tag):
     try_times = 0
     while True:
         url = 'https://www.douban.com/tag/' + \
-              urllib.request.quote( book_tag ) + '/book?start=' + str( page_num * 15 )
+              urllib.request.quote(book_tag) + '/book?start=' + str(page_num * 15)
         # Hang up the thread to avoid requesting too frequently
-        time.sleep( numpy.random.rand() * 5 )
+        time.sleep(numpy.random.rand() * 5)
         try:
             source_code = requests.get(
-                url, headers=User_Agents[page_num % len( User_Agents )], timeout=50 ).text
-            plain_text = str( source_code )
+                url, headers=User_Agents[page_num % len(User_Agents)], timeout=50).text
+            plain_text = str(source_code)
         except (requests.HTTPError, requests.URLRequired, requests.Timeout, requests.TooManyRedirects) as error:
-            print( error )
+            print(error)
             continue
 
-        soup = BeautifulSoup( plain_text, 'lxml' )  # lxml module is required.
-        list_soup = soup.find( 'div', attrs={'class': 'mod book-list'} )
+        soup = BeautifulSoup(plain_text, 'lxml')  # lxml module is required.
+        list_soup = soup.find('div', attrs={'class': 'mod book-list'})
         try_times += 1
         if list_soup is None and try_times < 200:
             continue
-        elif list_soup is None or len( list_soup ) <= 1:
+        elif list_soup is None or len(list_soup) <= 1:
             break  # No information returned after 200-time requesting
 
-        for book_info in list_soup.findAll( 'dd' ):
+        for book_info in list_soup.findAll('dd'):
             title = book_info.find(
                 'a', attrs={
-                    'class': 'title'} ).string.strip()
+                    'class': 'title'}).string.strip()
             desc = book_info.find(
                 'div', attrs={
-                    'class': 'desc'} ).string.strip()
-            desc_list = desc.split( '/' )
+                    'class': 'desc'}).string.strip()
+            desc_list = desc.split('/')
             book_url = book_info.find(
-                'a', attrs={'class': 'title'} ).get( 'href' )
+                'a', attrs={'class': 'title'}).get('href')
             try:
-                author_info = '/'.join( desc_list[0:-3] )
+                author_info = '/'.join(desc_list[0:-3])
             except BaseException:
                 author_info = ' 暂无'
             try:
-                pub_info = '/'.join( desc_list[-3:] )
+                pub_info = '/'.join(desc_list[-3:])
             except BaseException:
                 pub_info = ' 暂无'
             try:
-                rating = book_info.find( 'span',
-                                         {'class': 'rating_nums'} ).string.strip()
+                rating = book_info.find('span',
+                                        {'class': 'rating_nums'}).string.strip()
             except BaseException:
                 rating = '0.0'
 
-            book_list.append( [title, rating, author_info, pub_info] )
+            book_list.append([title, rating, author_info, pub_info])
             try_times = 0  # set 0 when got valid information
         page_num += 1
         print(
             "Downloading Information From Tag: {1} Page: {0} ".format(
-                page_num, book_tag ) )
-    print( 'Finish Catching Tag -> {0}'.format( book_tag ) )
+                page_num, book_tag))
+    print('Finish Catching Tag -> {0}'.format(book_tag))
     return book_list
 
 
 def fetch_list(book_tag: str, book_lists: list):
-    book_list = book_spider( book_tag )
-    book_list = sorted( book_list, key=lambda x: x[1], reverse=True )
-    book_lists.append( book_list )
+    book_list = book_spider(book_tag)
+    book_list = sorted(book_list, key=lambda x: x[1], reverse=True)
+    book_lists.append(book_list)
 
 
 def run_spider(book_tag_lists):
     book_lists = list()
-    with ThreadPoolExecutor( max_workers=len( book_tag_lists ) ) as executor:
+    with ThreadPoolExecutor(max_workers=len(book_tag_lists)) as executor:
         for book_tag in book_tag_lists:
-            executor.submit( fetch_list, book_tag, book_lists )
+            executor.submit(fetch_list, book_tag, book_lists)
     return book_lists
 
 
 def output_to_excel(book_lists, book_tag_lists):
-    wb = Workbook( write_only=True )
-    ws = [wb.create_sheet( title=book_tag ) for book_tag in book_tag_lists]
+    wb = Workbook(write_only=True)
+    ws = [wb.create_sheet(title=book_tag) for book_tag in book_tag_lists]
     file_name = 'Book-List'
-    for i in range( len( book_tag_lists ) ):
-        ws[i].append( ['序号', '书名', '评分', '作者/译者', '出版社', '出版日期', '售价'] )
-        for index, book_list in enumerate( book_lists[i], start=1 ):
-            ws[i].append( [index, book_list[0], float(
-                book_list[1] ), book_list[2], book_list[3]] )
-            print( "\r当前进度: {:.2f}%".format(
-                index * 100 / len( book_lists[i] ) ), end="" )
-    for i in range( len( book_tag_lists ) ):
+    for i in range(len(book_tag_lists)):
+        ws[i].append(['序号', '书名', '评分', '作者/译者', '出版社', '出版日期', '售价'])
+        for index, book_list in enumerate(book_lists[i], start=1):
+            ws[i].append([index, book_list[0], float(
+                book_list[1]), book_list[2], book_list[3]])
+            print("\r当前进度: {:.2f}%".format(
+                index * 100 / len(book_lists[i])), end="")
+    for i in range(len(book_tag_lists)):
         file_name += ('-' + book_tag_lists[i])
     file_name += '.xlsx'
-    wb.save( file_name )
+    wb.save(file_name)
 
 
 if __name__ == '__main__':
@@ -122,6 +122,6 @@ if __name__ == '__main__':
     # book_tag_lists = ['名著','人文','历史','传记','哲学','诗歌','散文','港台']
     # book_tag_lists = ['科幻','科普','经典','生活','心灵','文学']
     book_tag_lists = ['个人管理', '时间管理', '投资', '文化', '宗教']
-    book_lists = run_spider( book_tag_lists )
-    output_to_excel( book_lists, book_tag_lists )
-    print( "----All Done----" )
+    book_lists = run_spider(book_tag_lists)
+    output_to_excel(book_lists, book_tag_lists)
+    print("----All Done----")
