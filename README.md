@@ -11,15 +11,15 @@
     
 ##### 豆瓣页面截图：
 
-![Page](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/doubanpage.jpg?raw=true)
+![Page](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/reading_page.jpg?raw=true)
 
 ##### 运行时截图：
 
-![Running](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/running.jpg?raw=true)
+![Running](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/reading_running.jpg?raw=true)
 
 ##### Excel结果截图：
 
-![Excel](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/excel.jpg?raw=true)
+![Excel](https://github.com/SimonCqk/DouBanCrawls/blob/master/ScreenShots/reading_excel.jpg?raw=true)
 
 ### 豆瓣电影爬虫
 > 爬取结果在`Result_Movie`文件夹，可直接查看 <br>
